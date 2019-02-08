@@ -1,0 +1,12 @@
+{
+  "name": "Playmo",
+  "version": "0.0.1",
+  "description": "Add missing keyboard shortcuts to various streaming services",
+  "manifest_version": 2,
+  "content_scripts": [
+    {
+      "js": ["dist/index.js"],
+      "matches": ["https://*.hbonordic.com/*/play"]
+    }
+  ]
+}

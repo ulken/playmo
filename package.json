@@ -1,0 +1,18 @@
+{
+  "name": "playmo",
+  "version": "0.0.1",
+  "description": "Add missing keyboard shortcuts to various streaming services",
+  "main": "src/index.js",
+  "repository": "https://github.com/ulken/playmo",
+  "author": "Oskar Löfgren <islander.abroad@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "parcel build src/index.js"
+  },
+  "browserslist": [
+    "Chrome >= 62"
+  ],
+  "devDependencies": {
+    "parcel-bundler": "^1.11.0"
+  }
+}
