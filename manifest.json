@@ -6,7 +6,12 @@
   "content_scripts": [
     {
       "js": ["dist/index.js"],
-      "matches": ["https://*.hbonordic.com/*/play"]
+      "matches": [
+        "https://*.hbonordic.com/*/play",
+        "https://*.dplay.se/*",
+        "https://*.dplay.no/*",
+        "https://*.dplay.dk/*"
+      ]
     }
   ]
 }
