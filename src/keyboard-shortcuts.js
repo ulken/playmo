@@ -15,19 +15,29 @@ export default function KeyboardShortcuts({ video, keysToRegister }) {
   };
 
   return {
-    registerKeyListeners
+    registerKeyListeners,
+    deregisterKeyListeners
   };
 
   function registerKeyListeners() {
     Object.keys(keyEventCodeToCommand).forEach(eventName => {
-      document.addEventListener(eventName, ({ code }) => {
-        const codeToCommand = keyEventCodeToCommand[eventName];
-        if (keysToRegister.includes(code) && code in codeToCommand) {
-          event.preventDefault();
-          codeToCommand[code](event);
-        }
-      });
+      document.addEventListener(eventName, onKeyEvent);
     });
+  }
+
+  function deregisterKeyListeners() {
+    Object.keys(keyEventCodeToCommand).forEach(eventName => {
+      document.removeEventListener(eventName, onKeyEvent);
+    });
+  }
+
+  function onKeyEvent(event) {
+    const { type, code } = event;
+    const codeToCommand = keyEventCodeToCommand[type];
+    if (keysToRegister.includes(code) && code in codeToCommand) {
+      event.preventDefault();
+      codeToCommand[code](event);
+    }
   }
 
   function onSpaceKeyUp() {

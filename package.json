@@ -7,7 +7,9 @@
   "author": "Oskar Löfgren <islander.abroad@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "parcel build src/index.js"
+    "bundle": "parcel build src/index.js",
+    "copy": "cp manifest.json dist/",
+    "build": "yarn copy && yarn bundle"
   },
   "browserslist": [
     "Chrome >= 62"

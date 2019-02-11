@@ -1,4 +1,4 @@
-export { onEvent, waitForElement };
+export { onEvent, waitForElement, onElementRemove };
 
 function onEvent(element, eventName) {
   return new Promise(resolve => {
@@ -29,5 +29,22 @@ function waitForElement(selector) {
       childList: true,
       subtree: true
     });
+  });
+}
+
+function onElementRemove(element) {
+  return new Promise(resolve => {
+    const observer = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        const nodes = Array.from(mutation.removedNodes);
+        for (const node of nodes) {
+          if (node.matches && node.matches(selector)) {
+            observer.disconnect();
+            resolve(node);
+          }
+        }
+      });
+    });
+    observer.observe(element.parentNode, { childList: true });
   });
 }

@@ -1,5 +1,5 @@
 export default function Video({ element }) {
-  if (!element.tagName === "VIDEO") {
+  if (!element || !element.tagName === "VIDEO") {
     throw new Error("video element required");
   }
 
@@ -7,17 +7,10 @@ export default function Video({ element }) {
   const FAST_SCRUB_SECONDS = 60;
 
   return {
-    getElement,
     togglePlayState,
     fastForward,
-    rewind,
-    getCurrentTime,
-    setCurrentTime
+    rewind
   };
-
-  function getElement() {
-    return element;
-  }
 
   function togglePlayState() {
     if (element.paused) {
