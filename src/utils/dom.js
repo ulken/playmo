@@ -38,13 +38,16 @@ function onElementRemove(element) {
       mutations.forEach(mutation => {
         const nodes = Array.from(mutation.removedNodes);
         for (const node of nodes) {
-          if (node.matches && node.matches(selector)) {
+          if (node.contains(element)) {
             observer.disconnect();
-            resolve(node);
+            resolve();
           }
         }
       });
     });
-    observer.observe(element.parentNode, { childList: true });
+    observer.observe(document.documentElement, {
+      childList: true,
+      subtree: true
+    });
   });
 }
