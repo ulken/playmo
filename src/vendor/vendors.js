@@ -6,8 +6,7 @@ export default [
   },
   {
     elementSelector: "video#player",
-    elementSelector: "#player",
-    keysToRegister: ["ArrowLeft", "ArrowRight"],
+    keysToRegister: ["Space", "ArrowLeft", "ArrowRight"],
     matchURL: url => /^.*\.dplay\..*$/.test(url.hostname)
   }
 ];
