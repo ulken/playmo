@@ -1,6 +1,6 @@
 {
   "name": "playmo",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Add missing keyboard shortcuts to various streaming services",
   "main": "src/index.js",
   "repository": "https://github.com/ulken/playmo",
@@ -10,7 +10,8 @@
     "bundle": "parcel build src/index.js",
     "copy": "mkdir -p dist/ && cp manifest.json dist/",
     "build": "yarn copy && yarn bundle",
-    "clean": "rm -rf dist/"
+    "clean": "rm -rf dist/",
+    "bump": "bump *.json --yes"
   },
   "browserslist": [
     "Chrome >= 62"
