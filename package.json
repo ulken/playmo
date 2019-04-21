@@ -8,8 +8,9 @@
   "license": "MIT",
   "scripts": {
     "bundle": "parcel build src/index.js",
-    "copy": "cp manifest.json dist/",
-    "build": "yarn copy && yarn bundle"
+    "copy": "mkdir -p dist/ && cp manifest.json dist/",
+    "build": "yarn copy && yarn bundle",
+    "clean": "rm -rf dist/"
   },
   "browserslist": [
     "Chrome >= 62"
