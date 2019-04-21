@@ -1,6 +1,6 @@
 export default [
   {
-    elementSelector: "video[id^=vjs_video]",
+    elementSelector: "video[id$=Clpp_html5_mse_api]",
     keysToRegister: ["Space", "ArrowLeft", "ArrowRight"],
     matchURL: url => /^.*\.hbonordic\.com$/.test(url.hostname)
   },
