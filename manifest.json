@@ -5,7 +5,7 @@
   "manifest_version": 2,
   "content_scripts": [
     {
-      "js": ["dist/index.js"],
+      "js": ["index.js"],
       "matches": [
         "https://*.hbonordic.com/*/play",
         "https://*.dplay.se/*",
