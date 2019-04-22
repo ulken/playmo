@@ -7,16 +7,21 @@ export default function Video({ element }) {
   const FAST_SCRUB_SECONDS = 60;
 
   return {
+    isPlaying,
     togglePlayState,
     fastForward,
     rewind
   };
 
+  function isPlaying() {
+    return element.paused;
+  }
+
   function togglePlayState() {
-    if (element.paused) {
-      element.play();
-    } else {
+    if (isPlaying()) {
       element.pause();
+    } else {
+      element.play();
     }
   }
 

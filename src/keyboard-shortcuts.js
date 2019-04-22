@@ -41,7 +41,15 @@ export default function KeyboardShortcuts({ video, keysToRegister }) {
   }
 
   function onSpaceKeyUp() {
+    /* Workaround: For some players (looking at you Dplay), 
+      <Space> works _sometimes_ (e.g. in first rendered video element).
+       Detect and reset to not cancel out effect. */
+    const oldState = video.isPlaying();
     video.togglePlayState();
+    const newState = video.isPlaying();
+    if (oldState === newState) {
+      video.togglePlayState();
+    }
   }
 
   function onArrowLeftKeyDown({ shiftKey }) {
