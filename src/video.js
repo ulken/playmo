@@ -14,7 +14,7 @@ export default function Video({ element }) {
   };
 
   function isPlaying() {
-    return element.paused;
+    return !element.paused;
   }
 
   function togglePlayState() {
