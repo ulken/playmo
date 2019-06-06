@@ -1,6 +1,6 @@
 {
   "name": "playmo",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Add missing keyboard shortcuts to various streaming services",
   "main": "src/index.js",
   "repository": "https://github.com/ulken/playmo",
