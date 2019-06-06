@@ -7,10 +7,10 @@
     {
       "js": ["index.js"],
       "matches": [
-        "https://*.hbonordic.com/*/play",
-        "https://*.dplay.se/*",
-        "https://*.dplay.no/*",
-        "https://*.dplay.dk/*"
+        "*://*.hbonordic.com/*",
+        "*://*.dplay.se/*",
+        "*://*.dplay.no/*",
+        "*://*.dplay.dk/*"
       ]
     }
   ]
