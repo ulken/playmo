@@ -7,10 +7,10 @@
   "author": "Oskar Löfgren <islander.abroad@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "bundle": "parcel build src/index.js",
+    "bundle": "parcel build src/{index,background}.js",
     "copy": "mkdir -p dist/ && cp manifest.json dist/",
     "build": "yarn copy && yarn bundle",
-    "watch": "parcel watch src/index.js",
+    "watch": "parcel watch src/{index,background}.js",
     "clean": "rm -rf dist/",
     "bump": "bump *.json --yes"
   },
