@@ -24,13 +24,6 @@ const modifiedTimeForFilesInDirectory = async dir => {
   return sum(files.map(f => f.lastModified));
 };
 
-const hasDirectoryChanged = async (dir, lastModifiedTime) => {
-  if (!lastModifiedTime) return true;
-
-  const modifiedTime = await modifiedTimeForFilesInDirectory(dir);
-  return modifiedTime !== lastModifiedTIme;
-};
-
 const reload = () => {
   chrome.tabs.query({ active: true, currentWindow: true }, ([activeTab]) => {
     if (activeTab) {
