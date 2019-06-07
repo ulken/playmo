@@ -58,6 +58,9 @@ typings/
 .env
 .env.test
 
+# Private keys
+*.pem
+
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 
