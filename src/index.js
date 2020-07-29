@@ -15,7 +15,7 @@ async function loop() {
 
   keyboardShortcuts.registerKeyListeners();
 
-  /* If video element is removed when loading next episode,
+  /* If video element is removed when e.g. loading next video,
      clean up and start over again */
   await onElementRemove(element);
   keyboardShortcuts.deregisterKeyListeners();
