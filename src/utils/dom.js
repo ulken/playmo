@@ -1,21 +1,21 @@
 export { onEvent, waitForElement, onElementRemove };
 
 function onEvent(element, eventName) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     element.addEventListener(eventName, resolve);
   });
 }
 
 function waitForElement(selector) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const element = document.querySelector(selector);
     if (element) {
       resolve(element);
       return;
     }
 
-    const observer = new MutationObserver(mutations => {
-      mutations.forEach(mutation => {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
         const nodes = Array.from(mutation.addedNodes);
         for (const node of nodes) {
           if (node.matches && node.matches(selector)) {
@@ -27,15 +27,15 @@ function waitForElement(selector) {
     });
     observer.observe(document.documentElement, {
       childList: true,
-      subtree: true
+      subtree: true,
     });
   });
 }
 
 function onElementRemove(element) {
-  return new Promise(resolve => {
-    const observer = new MutationObserver(mutations => {
-      mutations.forEach(mutation => {
+  return new Promise((resolve) => {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
         const nodes = Array.from(mutation.removedNodes);
         for (const node of nodes) {
           if (node.contains(element)) {
@@ -47,7 +47,7 @@ function onElementRemove(element) {
     });
     observer.observe(document.documentElement, {
       childList: true,
-      subtree: true
+      subtree: true,
     });
   });
 }

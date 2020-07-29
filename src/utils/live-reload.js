@@ -1,27 +1,27 @@
-const flatten = arr =>
+const flatten = (arr) =>
   arr.reduce((acc, e) => acc.concat(Array.isArray(e) ? flatten(e) : e), []);
 
-const sum = xs => xs.reduce((acc, x) => acc + x, 0);
+const sum = (xs) => xs.reduce((acc, x) => acc + x, 0);
 
-const filesInDirectory = dir =>
-  new Promise(resolve =>
-    dir.createReader().readEntries(async entries => {
+const filesInDirectory = (dir) =>
+  new Promise((resolve) =>
+    dir.createReader().readEntries(async (entries) => {
       const files = await Promise.all(
         entries
-          .filter(e => !e.name.startsWith("."))
-          .map(e =>
+          .filter((e) => !e.name.startsWith("."))
+          .map((e) =>
             e.isDirectory
               ? filesInDirectory(e)
-              : new Promise(resolve => e.file(resolve))
+              : new Promise((resolve) => e.file(resolve))
           )
       );
       return resolve(flatten(files));
     })
   );
 
-const modifiedTimeForFilesInDirectory = async dir => {
+const modifiedTimeForFilesInDirectory = async (dir) => {
   const files = await filesInDirectory(dir);
-  return sum(files.map(f => f.lastModified));
+  return sum(files.map((f) => f.lastModified));
 };
 
 const reload = () => {
@@ -45,7 +45,7 @@ const watchForChanges = async (dir, lastModifiedTime) => {
 };
 
 const watch = () =>
-  chrome.management.getSelf(self => {
+  chrome.management.getSelf((self) => {
     if (self.installType === "development") {
       chrome.runtime.getPackageDirectoryEntry(watchForChanges);
     }

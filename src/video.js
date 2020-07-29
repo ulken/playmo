@@ -10,7 +10,7 @@ export default function Video({ element }) {
     isPlaying,
     togglePlayState,
     fastForward,
-    rewind
+    rewind,
   };
 
   function isPlaying() {

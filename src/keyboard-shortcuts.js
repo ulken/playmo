@@ -6,27 +6,27 @@ const SCRUB_THROTTLE_MS = 100;
 export default function KeyboardShortcuts({ video, keysToRegister }) {
   const keyEventCodeToCommand = {
     keyup: {
-      Space: onSpaceKeyUp
+      Space: onSpaceKeyUp,
     },
     keydown: {
       ArrowLeft: throttle(onArrowLeftKeyDown, SCRUB_THROTTLE_MS),
-      ArrowRight: throttle(onArrowRightKeyDown, SCRUB_THROTTLE_MS)
-    }
+      ArrowRight: throttle(onArrowRightKeyDown, SCRUB_THROTTLE_MS),
+    },
   };
 
   return {
     registerKeyListeners,
-    deregisterKeyListeners
+    deregisterKeyListeners,
   };
 
   function registerKeyListeners() {
-    Object.keys(keyEventCodeToCommand).forEach(eventName => {
+    Object.keys(keyEventCodeToCommand).forEach((eventName) => {
       document.addEventListener(eventName, onKeyEvent);
     });
   }
 
   function deregisterKeyListeners() {
-    Object.keys(keyEventCodeToCommand).forEach(eventName => {
+    Object.keys(keyEventCodeToCommand).forEach((eventName) => {
       document.removeEventListener(eventName, onKeyEvent);
     });
   }
