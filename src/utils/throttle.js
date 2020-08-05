@@ -1,11 +1,13 @@
-export default function throttle(f, wait) {
+export default function throttle(task, delay) {
   let timeoutId = null;
-  return (...args) => {
-    if (timeoutId) return;
+  return (...parameters) => {
+    if (timeoutId) {
+      return;
+    }
 
-    f.apply(this, args);
+    task.apply(this, parameters);
     timeoutId = setTimeout(() => {
       timeoutId = null;
-    }, wait);
+    }, delay);
   };
 }
