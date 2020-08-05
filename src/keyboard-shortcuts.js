@@ -1,18 +1,29 @@
+import createDebug from "debug";
 import throttle from "./utils/throttle";
+import { debugKeyboardEvent } from "./utils/pretty-print.js";
 
-// Prevent flooding (UI can't keep up anyway)
+const debug = createDebug("playmo:kbd");
+
+// prevent flooding (UI can't keep up anyway)
 const SCRUB_THROTTLE_MS = 100;
 
-export default function KeyboardShortcuts({ video, keysToRegister }) {
-  const keyEventCodeToCommand = {
-    keyup: {
-      Space: onSpaceKeyUp,
-    },
+export default function KeyboardShortcuts({ video }) {
+  const keyEventCodeToCommandHandler = {
     keydown: {
       ArrowLeft: throttle(onArrowLeftKeyDown, SCRUB_THROTTLE_MS),
       ArrowRight: throttle(onArrowRightKeyDown, SCRUB_THROTTLE_MS),
     },
+    keyup: {
+      Space: onSpaceKeyUp,
+    },
   };
+
+  const defaultState = Object.freeze({
+    // needed to track whether event/command is already handled natively
+    eventHandled: false,
+  });
+
+  const state = { ...defaultState };
 
   return {
     registerKeyListeners,
@@ -20,43 +31,59 @@ export default function KeyboardShortcuts({ video, keysToRegister }) {
   };
 
   function registerKeyListeners() {
-    Object.keys(keyEventCodeToCommand).forEach((eventName) => {
+    Object.keys(keyEventCodeToCommandHandler).forEach((eventName) => {
       document.addEventListener(eventName, onKeyEvent);
     });
+    document.addEventListener("keyup", resetState);
   }
 
   function deregisterKeyListeners() {
-    Object.keys(keyEventCodeToCommand).forEach((eventName) => {
+    Object.keys(keyEventCodeToCommandHandler).forEach((eventName) => {
       document.removeEventListener(eventName, onKeyEvent);
+    });
+    document.removeEventListener("keyup", resetState);
+  }
+
+  function resetState() {
+    Object.entries(defaultState).forEach(([k, v]) => {
+      state[k] = v;
     });
   }
 
   function onKeyEvent(event) {
     const { type, code } = event;
-    const codeToCommand = keyEventCodeToCommand[type];
-    if (keysToRegister.includes(code) && code in codeToCommand) {
+    debugKeyboardEvent(event);
+
+    if (video.hasStateChanged()) {
+      state.eventHandled = true;
+    }
+
+    if (state.eventHandled) {
+      debugKeyboardEvent(event, "event already handled");
+      return;
+    }
+
+    const handleCommand = keyEventCodeToCommandHandler[type][code];
+    if (handleCommand) {
+      debugKeyboardEvent(event, "handling event");
       event.preventDefault();
-      codeToCommand[code](event);
+      handleCommand(event);
     }
   }
 
   function onSpaceKeyUp() {
-    /* Workaround: For some players (looking at you Dplay), 
-      <Space> works _sometimes_ (e.g. in first rendered video element).
-       Detect and reset to not cancel out effect. */
-    const oldState = video.isPlaying();
+    const playing = video.isPlaying();
+    debug(`toggling play state: ${playing} -> ${!playing}`);
     video.togglePlayState();
-    const newState = video.isPlaying();
-    if (oldState === newState) {
-      video.togglePlayState();
-    }
   }
 
-  function onArrowLeftKeyDown({ shiftKey }) {
-    video.rewind({ fast: shiftKey });
+  function onArrowLeftKeyDown({ shiftKey: fast }) {
+    debug(`rewinding [fast=${fast}]`);
+    video.rewind({ fast });
   }
 
-  function onArrowRightKeyDown({ shiftKey }) {
-    video.fastForward({ fast: shiftKey });
+  function onArrowRightKeyDown({ shiftKey: fast }) {
+    debug(`fast forwarding [fast=${fast}]`);
+    video.fastForward({ fast });
   }
 }
