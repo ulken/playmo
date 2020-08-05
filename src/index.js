@@ -1,23 +1,34 @@
-import VideoController from "./video";
+import createDebug from "debug";
 import KeyboardShortcuts from "./keyboard-shortcuts";
-import { onEvent, waitForElement, onElementRemove } from "./utils/dom";
+import { onElementRemove, onEvent, waitForElement } from "./utils/dom";
 import getCurrentVendor from "./vendor/current";
+import VideoController from "./video";
+
+const debug = createDebug("playmo:main");
 
 (function main() {
+  debug("extension loaded");
+
   loop();
 })();
 
 async function loop() {
-  const { elementSelector, keysToRegister } = getCurrentVendor();
+  const { elementSelector } = getCurrentVendor();
+  debug(`element selector: ${elementSelector}`);
+
   const element = await videoLoaded(elementSelector);
+  debug("video element loaded");
+
   const video = VideoController({ element });
-  const keyboardShortcuts = KeyboardShortcuts({ video, keysToRegister });
+  const keyboardShortcuts = KeyboardShortcuts({ video });
 
   keyboardShortcuts.registerKeyListeners();
 
-  /* If video element is removed when e.g. loading next video,
-     clean up and start over again */
+  // if video element is removed when e.g. loading next video,
+  // clean up and start over again
   await onElementRemove(element);
+  debug("video element removed");
+
   keyboardShortcuts.deregisterKeyListeners();
   loop();
 }
