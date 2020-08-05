@@ -35,6 +35,11 @@ async function loop() {
 
 async function videoLoaded(selector) {
   const video = await waitForElement(selector);
+
+  if (video.readyState === HTMLVideoElement.HAVE_METADATA) {
+    return video;
+  }
+
   await onEvent(video, "loadedmetadata");
   return video;
 }
