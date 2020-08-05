@@ -1,6 +1,6 @@
 import createDebug from "debug";
 import throttle from "./utils/throttle";
-import { debugKeyboardEvent } from "./utils/pretty-print.js";
+import { prettifyKeyboardEvent } from "./utils/pretty-print.js";
 
 const debug = createDebug("playmo:kbd");
 
@@ -52,20 +52,20 @@ export default function KeyboardShortcuts({ video }) {
 
   function onKeyEvent(event) {
     const { type, code } = event;
-    debugKeyboardEvent(event);
+    debug(prettifyKeyboardEvent(event));
 
     if (video.hasStateChanged()) {
       state.eventHandled = true;
     }
 
     if (state.eventHandled) {
-      debugKeyboardEvent(event, "event already handled");
+      debug(prettifyKeyboardEvent(event, "event already handled"));
       return;
     }
 
     const handleCommand = keyEventCodeToCommandHandler[type][code];
     if (handleCommand) {
-      debugKeyboardEvent(event, "handling event");
+      debug(prettifyKeyboardEvent(event, "handling event"));
       event.preventDefault();
       handleCommand(event);
     }
