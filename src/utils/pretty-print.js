@@ -1,12 +1,10 @@
-export { debugKeyboardEvent, glyphifyKeyCode, humanizeKeyEventType };
+export { prettifyKeyboardEvent, glyphifyKeyCode, humanizeKeyEventType };
 
-function debugKeyboardEvent({ type, code }, message = "") {
+function prettifyKeyboardEvent({ type, code }, message = "") {
   const prefixedMessage = message ? `: ${message}` : message;
-  debug(
-    `❲ ${glyphifyKeyCode(code)} ❳ ${humanizeKeyEventType(
-      type
-    )}${prefixedMessage}`
-  );
+  return `❲ ${glyphifyKeyCode(code)} ❳ ${humanizeKeyEventType(
+    type
+  )}${prefixedMessage}`;
 }
 
 function glyphifyKeyCode(code) {
