@@ -2,7 +2,7 @@ import createDebug from "debug";
 import KeyboardShortcuts from "./keyboard-shortcuts";
 import { onElementRemove, onEvent, waitForElement } from "./utils/dom";
 import getCurrentVendor from "./vendor/current";
-import VideoController from "./video";
+import VideoController from "./video-controller";
 
 const debug = createDebug("playmo:main");
 

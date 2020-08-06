@@ -1,6 +1,6 @@
 import throttle from "./utils/throttle";
 
-export default function Video({ element }) {
+export default function VideoController({ element }) {
   if (!element || !element.tagName === "VIDEO") {
     throw new Error("video element required");
   }
