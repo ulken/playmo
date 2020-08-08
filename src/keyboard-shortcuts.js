@@ -1,6 +1,7 @@
 import createDebug from "debug";
 import throttle from "./utils/throttle";
-import { prettifyKeyboardEvent } from "./utils/pretty-print.js";
+import KeyCodes from "./utils/key-codes";
+import { prettifyKeyboardEvent } from "./utils/pretty-print";
 
 const debug = createDebug("playmo:kbd");
 
@@ -34,6 +35,7 @@ export default function KeyboardShortcuts({ video }) {
     Object.keys(keyEventCodeToCommandHandler).forEach((eventName) => {
       document.addEventListener(eventName, onKeyEvent);
     });
+    document.addEventListener("keydown", preventSpacebarFromSrollingPage);
     document.addEventListener("keyup", resetState);
   }
 
@@ -41,7 +43,20 @@ export default function KeyboardShortcuts({ video }) {
     Object.keys(keyEventCodeToCommandHandler).forEach((eventName) => {
       document.removeEventListener(eventName, onKeyEvent);
     });
+    document.removeEventListener("keydown", preventSpacebarFromSrollingPage);
     document.removeEventListener("keyup", resetState);
+  }
+
+  function preventSpacebarFromSrollingPage(event) {
+    if (
+      event.target.isSameNode(document.body) &&
+      event.code === KeyCodes.Space
+    ) {
+      debug(
+        prettifyKeyboardEvent(event, "preventing spacebar from scrolling page")
+      );
+      event.preventDefault();
+    }
   }
 
   function resetState() {
