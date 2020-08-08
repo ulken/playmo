@@ -11,11 +11,11 @@ const SCRUB_THROTTLE_MS = 100;
 export default function KeyboardShortcuts({ video }) {
   const keyEventCodeToCommandHandler = {
     keydown: {
-      ArrowLeft: throttle(onArrowLeftKeyDown, SCRUB_THROTTLE_MS),
-      ArrowRight: throttle(onArrowRightKeyDown, SCRUB_THROTTLE_MS),
+      [KeyCodes.ArrowLeft]: throttle(onArrowLeftKeyDown, SCRUB_THROTTLE_MS),
+      [KeyCodes.ArrowRight]: throttle(onArrowRightKeyDown, SCRUB_THROTTLE_MS),
     },
     keyup: {
-      Space: onSpaceKeyUp,
+      [KeyCodes.Space]: onSpaceKeyUp,
     },
   };
 

@@ -1,1 +1,3 @@
-export default Object.freeze(Object.fromEntries(["Space"].map((k) => [k, k])));
+export default Object.freeze(
+  Object.fromEntries(["Space", "ArrowLeft", "ArrowRight"].map((k) => [k, k]))
+);
