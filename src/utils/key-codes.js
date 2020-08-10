@@ -1,3 +1,12 @@
 export default Object.freeze(
-  Object.fromEntries(["Space", "ArrowLeft", "ArrowRight"].map((k) => [k, k]))
+  Object.fromEntries(
+    [
+      "Space",
+      "ArrowLeft",
+      "ArrowRight",
+      "ArrowUp",
+      "ArrowDown",
+      "KeyM",
+    ].map((k) => [k, k])
+  )
 );

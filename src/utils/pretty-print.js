@@ -11,8 +11,10 @@ function glyphifyKeyCode(code) {
   return (
     {
       Space: "␣",
-      ArrowLeft: "◀",
-      ArrowRight: "▶",
+      ArrowLeft: "◀️",
+      ArrowRight: "▶️",
+      ArrowUp: "🔼",
+      ArrowDown: "🔽",
     }[code] || code
   );
 }
