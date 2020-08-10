@@ -10,12 +10,17 @@ const SCRUB_THROTTLE_MS = 100;
 
 export default function KeyboardShortcuts({ video }) {
   const keyEventCodeToCommandHandler = {
+    // continuous, repetitive actions ("press and hold")
     keydown: {
       [KeyCodes.ArrowLeft]: throttle(onArrowLeftKeyDown, SCRUB_THROTTLE_MS),
       [KeyCodes.ArrowRight]: throttle(onArrowRightKeyDown, SCRUB_THROTTLE_MS),
+      [KeyCodes.ArrowUp]: throttle(onArrowUpKeyDown, SCRUB_THROTTLE_MS),
+      [KeyCodes.ArrowDown]: throttle(onArrowDownKeyDown, SCRUB_THROTTLE_MS),
     },
+    // toggles
     keyup: {
       [KeyCodes.Space]: onSpaceKeyUp,
+      [KeyCodes.KeyM]: onMKeyUp,
     },
   };
 
@@ -70,6 +75,7 @@ export default function KeyboardShortcuts({ video }) {
     debug(prettifyKeyboardEvent(event));
 
     if (video.hasStateChanged()) {
+      // note: handled `keydown` event propagates to `keyup`
       state.eventHandled = true;
     }
 
@@ -92,6 +98,12 @@ export default function KeyboardShortcuts({ video }) {
     video.togglePlayState();
   }
 
+  function onMKeyUp() {
+    const muted = video.isMuted();
+    debug(`toggling muted state: ${muted} -> ${!muted}`);
+    video.toggleMute();
+  }
+
   function onArrowLeftKeyDown({ shiftKey: fast }) {
     debug(`rewinding [fast=${fast}]`);
     video.rewind({ fast });
@@ -100,5 +112,15 @@ export default function KeyboardShortcuts({ video }) {
   function onArrowRightKeyDown({ shiftKey: fast }) {
     debug(`fast forwarding [fast=${fast}]`);
     video.fastForward({ fast });
+  }
+
+  function onArrowUpKeyDown() {
+    debug("volume up");
+    video.volumeUp();
+  }
+
+  function onArrowDownKeyDown() {
+    debug("volume down");
+    video.volumeDown();
   }
 }
