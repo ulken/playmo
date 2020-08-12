@@ -20,6 +20,7 @@ export default function KeyboardShortcuts({ video }) {
     // toggles
     keyup: {
       [KeyCodes.Space]: onSpaceKeyUp,
+      [KeyCodes.Enter]: onEnterKeyUp,
       [KeyCodes.KeyM]: onMKeyUp,
     },
   };
@@ -98,20 +99,43 @@ export default function KeyboardShortcuts({ video }) {
     video.togglePlayState();
   }
 
+  function onEnterKeyUp({ altKey: shouldResetPlaybackRate }) {
+    if (shouldResetPlaybackRate) {
+      debug("resetting playback rate");
+      video.resetPlaybackRate();
+    }
+  }
+
   function onMKeyUp() {
     const muted = video.isMuted();
     debug(`toggling muted state: ${muted} -> ${!muted}`);
     video.toggleMute();
   }
 
-  function onArrowLeftKeyDown({ shiftKey: fast }) {
-    debug(`rewinding [fast=${fast}]`);
-    video.rewind({ fast });
+  function onArrowLeftKeyDown({
+    altKey: decreasePlaybackRate,
+    shiftKey: fast,
+  }) {
+    if (decreasePlaybackRate) {
+      debug("decreasing playback rate");
+      video.decreasePlaybackRate();
+    } else {
+      debug(`rewinding [fast=${fast}]`);
+      video.rewind({ fast });
+    }
   }
 
-  function onArrowRightKeyDown({ shiftKey: fast }) {
-    debug(`fast forwarding [fast=${fast}]`);
-    video.fastForward({ fast });
+  function onArrowRightKeyDown({
+    altKey: increasePlaybackRate,
+    shiftKey: fast,
+  }) {
+    if (increasePlaybackRate) {
+      debug("increasing playback rate");
+      video.increasePlaybackRate();
+    } else {
+      debug(`fast forwarding [fast=${fast}]`);
+      video.fastForward({ fast });
+    }
   }
 
   function onArrowUpKeyDown() {

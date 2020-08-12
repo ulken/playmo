@@ -6,19 +6,41 @@ export default function VideoController({ element }) {
   }
 
   const TIME_THROTTLE_MS = 100;
-  const VOLUME_STEP = 0.1;
 
   const ScrubSpeed = {
     Default: 10,
     Fast: 60,
   };
 
-  const previousState = createSnapshot();
+  const Volume = {
+    Min: 0,
+    Max: 1,
+    Step: 0.1,
+  };
+
+  const PlaybackRate = {
+    // rationale: https://stackoverflow.com/a/32320020
+    Min: 0.0625,
+    Max: 16,
+    Step: 0.1,
+    Default: 1,
+  };
+
+  const ELEMENT_STATE_PROPERTIES = [
+    "paused,",
+    "currentTime",
+    "volume",
+    "playbackRate",
+  ];
+
+  const previousState = createSnapshot(ELEMENT_STATE_PROPERTIES);
 
   // note: `volumehange` includes changes to both the `volume` and `muted` properties
-  ["play", "pause", "playing", "ended", "volumechange"].forEach((eventName) => {
-    element.addEventListener(eventName, updateState);
-  });
+  ["play", "pause", "playing", "ended", "volumechange", "ratechange"].forEach(
+    (eventName) => {
+      element.addEventListener(eventName, updateState);
+    }
+  );
 
   // no need for more frequent updates
   element.addEventListener(
@@ -35,6 +57,9 @@ export default function VideoController({ element }) {
     volumeUp: withStateUpdate(volumeUp),
     volumeDown: withStateUpdate(volumeDown),
     toggleMute: withStateUpdate(toggleMute),
+    increasePlaybackRate: withStateUpdate(increasePlaybackRate),
+    decreasePlaybackRate: withStateUpdate(decreasePlaybackRate),
+    resetPlaybackRate: withStateUpdate(resetPlaybackRate),
     hasStateChanged,
   };
 
@@ -72,17 +97,37 @@ export default function VideoController({ element }) {
   }
 
   function volumeUp() {
-    const newVolume = Math.min(getVolume() + VOLUME_STEP, 1);
+    const newVolume = Math.min(getVolume() + Volume.Step, Volume.Max);
     setVolume(newVolume);
   }
 
   function volumeDown() {
-    const newVolume = Math.max(getVolume() - VOLUME_STEP, 0);
+    const newVolume = Math.max(getVolume() - Volume.Step, Volume.Min);
     setVolume(newVolume);
   }
 
   function toggleMute() {
     element.muted = !element.muted;
+  }
+
+  function increasePlaybackRate() {
+    const newPlaybackRate = Math.min(
+      getPlaybackRate() + PlaybackRate.Step,
+      PlaybackRate.Max
+    );
+    setPlaybackRate(newPlaybackRate);
+  }
+
+  function decreasePlaybackRate() {
+    const newPlaybackRate = Math.max(
+      getPlaybackRate() - PlaybackRate.Step,
+      PlaybackRate.Min
+    );
+    setPlaybackRate(newPlaybackRate);
+  }
+
+  function resetPlaybackRate() {
+    setPlaybackRate(PlaybackRate.Default);
   }
 
   function hasStateChanged() {
@@ -106,10 +151,8 @@ export default function VideoController({ element }) {
     });
   }
 
-  function createSnapshot() {
-    return cloneState(element, {
-      properties: ["paused,", "currentTime", "volume"],
-    });
+  function createSnapshot(properties) {
+    return cloneState(element, { properties });
   }
 
   function getCurrentTime() {
@@ -130,5 +173,13 @@ export default function VideoController({ element }) {
 
   function setVolume(volume) {
     element.volume = volume;
+  }
+
+  function getPlaybackRate() {
+    return element.playbackRate;
+  }
+
+  function setPlaybackRate(playbackRate) {
+    element.playbackRate = playbackRate;
   }
 }

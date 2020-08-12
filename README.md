@@ -13,13 +13,16 @@ Unfortunately, all players are not decent, by default. **Playmo** is here to fil
 
 ## Keyboard shortcuts
 
-| Keyboard shortcut       | Description                        |
-| ----------------------- | ---------------------------------- |
-| <kbd>Space</kbd>        | Toggle play state (play/pause)     |
-| ◀️  (+ <kbd>Shift</kbd>) | Rewind 10 (60) seconds             |
-| ▶️ (+ <kbd>Shift</kbd>)  | Fast-forward 10 (60) seconds       |
-| ️🔼                      | Volume up 10 %                     |
-| ️🔽                      | Volume down 10 %                   |
-| <kbd>M</kbd>            | Toggle muted state (mute/unmute)\* |
+| Keyboard shortcut                 | Description                        |
+| --------------------------------- | ---------------------------------- |
+| <kbd>Space</kbd>                  | Toggle play state (play/pause)     |
+| (<kbd>Shift</kbd> +) ◀️           | Rewind 10 (60) seconds             |
+| (<kbd>Shift</kbd> +) ▶️           | Fast-forward 10 (60) seconds       |
+| <kbd>Alt</kbd> + ◀️               | Increase playback rate 10 %        |
+| <kbd>Alt</kbd> + ▶️               | Decrease playback rate 10 %        |
+| <kbd>Alt</kbd> + <kbd>Enter</kbd> | Reset playback rate to normal      |
+| ️🔼                               | Volume up 10 %                     |
+| ️🔽                               | Volume down 10 %                   |
+| <kbd>M</kbd>                      | Toggle muted state (mute/unmute)\* |
 
 \* Some sites don't allow toggling mute programatically
