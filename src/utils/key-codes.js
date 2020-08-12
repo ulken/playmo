@@ -2,6 +2,7 @@ export default Object.freeze(
   Object.fromEntries(
     [
       "Space",
+      "Enter",
       "ArrowLeft",
       "ArrowRight",
       "ArrowUp",
