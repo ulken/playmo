@@ -22,6 +22,8 @@ export default function KeyboardShortcuts({ video }) {
       [KeyCodes.Space]: onSpaceKeyUp,
       [KeyCodes.Enter]: onEnterKeyUp,
       [KeyCodes.KeyM]: onMKeyUp,
+      [KeyCodes.KeyF]: onFKeyUp,
+      [KeyCodes.Escape]: onEscapeKeyUp,
     },
   };
 
@@ -110,6 +112,21 @@ export default function KeyboardShortcuts({ video }) {
     const muted = video.isMuted();
     debug(`toggling muted state: ${muted} -> ${!muted}`);
     video.toggleMute();
+  }
+
+  function onFKeyUp() {
+    const transition = video.isFullscreen()
+      ? "fullscreen -> windowed"
+      : "windowed -> fullscreen";
+    debug(`toggling fullscreen state: ${transition}`);
+    video.toggleFullscreen();
+  }
+
+  function onEscapeKeyUp() {
+    if (video.isFullscreen()) {
+      debug("exiting fullscreen mode");
+      video.exitFullscreen();
+    }
   }
 
   function onArrowLeftKeyDown({

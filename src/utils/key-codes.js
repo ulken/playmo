@@ -8,6 +8,8 @@ export default Object.freeze(
       "ArrowUp",
       "ArrowDown",
       "KeyM",
+      "KeyF",
+      "Escape"
     ].map((k) => [k, k])
   )
 );

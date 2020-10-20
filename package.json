@@ -23,6 +23,5 @@
     "crx": "^5.0.0",
     "debug": "^4.1.1",
     "parcel-bundler": "^1.11.0"
-  },
-  "dependencies": {}
+  }
 }
