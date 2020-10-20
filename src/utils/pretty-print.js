@@ -63,7 +63,7 @@ function glyphifyKeyCode(code) {
       MetaLeft: "⌘",
       AltLeft: "⌥",
       Escape: "⎋",
-    }[code] || code
+    }[code] || code.replace("Key", "")
   );
 }
 

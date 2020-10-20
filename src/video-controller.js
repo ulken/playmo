@@ -30,7 +30,9 @@ export default function VideoController({ element }) {
     "paused,",
     "currentTime",
     "volume",
+    "muted",
     "playbackRate",
+    "fullscreen",
   ];
 
   const previousState = createSnapshot(ELEMENT_STATE_PROPERTIES);
@@ -48,9 +50,12 @@ export default function VideoController({ element }) {
     throttle(updateState, TIME_THROTTLE_MS)
   );
 
+  document.addEventListener("fullscreenchange", updateState);
+
   return {
     isPlaying,
     isMuted,
+    isFullscreen,
     togglePlayState: withStateUpdate(togglePlayState),
     fastForward: withStateUpdate(fastForward),
     rewind: withStateUpdate(rewind),
@@ -60,7 +65,10 @@ export default function VideoController({ element }) {
     increasePlaybackRate: withStateUpdate(increasePlaybackRate),
     decreasePlaybackRate: withStateUpdate(decreasePlaybackRate),
     resetPlaybackRate: withStateUpdate(resetPlaybackRate),
+    toggleFullscreen: withStateUpdate(toggleFullscreen),
+    exitFullscreen: withStateUpdate(exitFullscreen),
     hasStateChanged,
+    destroy,
   };
 
   function withStateUpdate(action) {
@@ -70,12 +78,23 @@ export default function VideoController({ element }) {
     };
   }
 
+  function destroy() {
+    document.removeEventListener("fullscreenchange", updateState);
+  }
+
   function isPlaying() {
     return !element.paused;
   }
 
   function isMuted() {
     return element.muted;
+  }
+
+  function isFullscreen() {
+    return (
+      document.fullscreenElement !== null &&
+      document.fullscreenElement.isSameNode(element)
+    );
   }
 
   function togglePlayState() {
@@ -130,9 +149,21 @@ export default function VideoController({ element }) {
     setPlaybackRate(PlaybackRate.Default);
   }
 
+  function toggleFullscreen() {
+    if (isFullscreen()) {
+      exitFullscreen();
+    } else {
+      element.requestFullscreen();
+    }
+  }
+
+  function exitFullscreen() {
+    document.exitFullscreen();
+  }
+
   function hasStateChanged() {
     return Object.entries(previousState).some(([property, oldValue]) => {
-      const currentValue = element[property];
+      const currentValue = getPropertyValue(element, property);
       if (property === "currentTime") {
         // any change less than a second is not practically relevant
         return Math.abs(currentValue - oldValue) > 1;
@@ -142,13 +173,19 @@ export default function VideoController({ element }) {
   }
 
   function cloneState(element, { properties }) {
-    return Object.fromEntries(properties.map((p) => [p, element[p]]));
+    return Object.fromEntries(
+      properties.map((p) => [p, getPropertyValue(element, p)])
+    );
   }
 
   function updateState() {
-    Object.keys(previousState).forEach((key) => {
-      previousState[key] = element[key];
+    ELEMENT_STATE_PROPERTIES.forEach((property) => {
+      previousState[property] = getPropertyValue(element, property);
     });
+  }
+
+  function getPropertyValue(element, property) {
+    return property === "fullscreen" ? isFullscreen() : element[property];
   }
 
   function createSnapshot(properties) {

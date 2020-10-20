@@ -30,6 +30,7 @@ async function loop() {
   debug("video element removed");
 
   keyboardShortcuts.deregisterKeyListeners();
+  video.destroy();
   loop();
 }
 
