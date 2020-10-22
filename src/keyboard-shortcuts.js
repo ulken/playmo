@@ -20,6 +20,7 @@ export default function KeyboardShortcuts({ video }) {
     // toggles
     keyup: {
       [KeyCodes.Space]: onSpaceKeyUp,
+      [KeyCodes.MediaPlayPause]: onMediaPlayPauseKeyUp,
       [KeyCodes.Enter]: onEnterKeyUp,
       [KeyCodes.KeyM]: onMKeyUp,
       [KeyCodes.KeyF]: onFKeyUp,
@@ -95,10 +96,18 @@ export default function KeyboardShortcuts({ video }) {
     }
   }
 
-  function onSpaceKeyUp() {
+  function togglePlayState() {
     const playing = video.isPlaying();
     debug(`toggling play state: ${playing} -> ${!playing}`);
     video.togglePlayState();
+  }
+
+  function onSpaceKeyUp() {
+    togglePlayState();
+  }
+
+  function onMediaPlayPauseKeyUp() {
+    togglePlayState();
   }
 
   function onEnterKeyUp({ altKey: shouldResetPlaybackRate }) {

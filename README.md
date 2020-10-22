@@ -15,7 +15,7 @@ Unfortunately, all players are not decent, by default. **Playmo** is here to fil
 
 | Keyboard shortcut                 | Description                                    |
 | --------------------------------- | ---------------------------------------------- |
-| <kbd>Space</kbd>                  | Toggle play state (play/pause)                 |
+| <kbd>Space</kbd> / ⏯️             | Toggle play state (play/pause)                 |
 | (<kbd>Shift</kbd> +) ◀️           | Rewind 10 (60) seconds                         |
 | (<kbd>Shift</kbd> +) ▶️           | Fast-forward 10 (60) seconds                   |
 | <kbd>Alt</kbd> + ◀️               | Increase playback rate 10 %                    |
