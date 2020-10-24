@@ -11,7 +11,13 @@
     "video player",
     "keyboard shortcuts",
     "hotkeys",
-    "chrome extension"
+    "chrome extension",
+    "streaming services",
+    "streaming video",
+    "hbo nordic",
+    "dplay",
+    "sf anytime",
+    "viafree"
   ],
   "scripts": {
     "bundle": "parcel build src/{index,background}.js",
