@@ -24,8 +24,8 @@ function ElementObserver({ selector }) {
 
       for (const element of Array.from(removedNodes)) {
         if (element.matches && element.matches(selector)) {
-          intersectionObserver.unobserve(element);
           emit("elementRemoved", element);
+          intersectionObserver.unobserve(element);
         }
       }
     });
