@@ -1,15 +1,10 @@
 # ▶️ Playmo
 
-> Add missing keyboard shortcuts to various streaming services
+> Gracefully add missing keyboard shortcuts to video players
 
-Any decent video player of a streaming service supports standard keyboard shortcuts. At least <kbd>Space</kbd> for toggling play state and ◀️ / ▶️ for rewinding/fast-forwarding, respectively.
+Any decent video player supports standard keyboard shortcuts. At least <kbd>Space</kbd> for toggling play state and ◀️ / ▶️ for rewinding/fast-forwarding, respectively.
 
 Unfortunately, all players are not decent, by default. **Playmo** is here to fill the expectation gap and _Make Players Great Again™_.
-
-## Supported services
-
-- HBO Nordic
-- Dplay
 
 ## Keyboard shortcuts
 

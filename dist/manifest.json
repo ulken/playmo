@@ -1,18 +1,16 @@
 {
   "name": "Playmo",
   "version": "0.1.0",
-  "description": "Add missing keyboard shortcuts to various streaming services",
+  "description": "Gracefully add missing keyboard shortcuts to video players",
   "manifest_version": 2,
   "content_scripts": [
     {
       "js": ["index.js"],
-      "matches": [
-        "*://*.hbonordic.com/*",
-        "*://*.dplay.se/*",
-        "*://*.dplay.no/*",
-        "*://*.dplay.dk/*"
-      ]
+      "matches": ["<all_urls>"]
     }
   ],
-  "background": { "scripts": ["background.js"] }
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  }
 }

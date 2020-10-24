@@ -36,24 +36,28 @@ export default function KeyboardShortcuts({ video }) {
   const state = { ...defaultState };
 
   return {
-    registerKeyListeners,
-    deregisterKeyListeners,
+    registerListeners,
+    unregisterListeners,
   };
 
-  function registerKeyListeners() {
+  function registerListeners() {
     Object.keys(keyEventCodeToCommandHandler).forEach((eventName) => {
       document.addEventListener(eventName, onKeyEvent);
     });
     document.addEventListener("keydown", preventSpacebarFromSrollingPage);
     document.addEventListener("keyup", resetState);
+
+    video.registerListeners();
   }
 
-  function deregisterKeyListeners() {
+  function unregisterListeners() {
     Object.keys(keyEventCodeToCommandHandler).forEach((eventName) => {
       document.removeEventListener(eventName, onKeyEvent);
     });
     document.removeEventListener("keydown", preventSpacebarFromSrollingPage);
     document.removeEventListener("keyup", resetState);
+
+    video.unregisterListeners();
   }
 
   function preventSpacebarFromSrollingPage(event) {
