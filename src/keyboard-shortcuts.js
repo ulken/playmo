@@ -41,9 +41,9 @@ export default function KeyboardShortcuts({ video }) {
   };
 
   function registerListeners() {
-    Object.keys(keyEventCodeToCommandHandler).forEach((eventName) => {
+    for (const eventName of Object.keys(keyEventCodeToCommandHandler)) {
       document.addEventListener(eventName, onKeyEvent);
-    });
+    }
     document.addEventListener("keydown", preventSpacebarFromSrollingPage);
     document.addEventListener("keyup", resetState);
 
@@ -51,9 +51,9 @@ export default function KeyboardShortcuts({ video }) {
   }
 
   function unregisterListeners() {
-    Object.keys(keyEventCodeToCommandHandler).forEach((eventName) => {
+    for (const eventName of Object.keys(keyEventCodeToCommandHandler)) {
       document.removeEventListener(eventName, onKeyEvent);
-    });
+    }
     document.removeEventListener("keydown", preventSpacebarFromSrollingPage);
     document.removeEventListener("keyup", resetState);
 
@@ -73,9 +73,9 @@ export default function KeyboardShortcuts({ video }) {
   }
 
   function resetState() {
-    Object.entries(defaultState).forEach(([k, v]) => {
+    for (const [k, v] of Object.entries(defaultState)) {
       state[k] = v;
-    });
+    }
   }
 
   function onKeyEvent(event) {

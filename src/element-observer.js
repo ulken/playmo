@@ -4,17 +4,17 @@ function ElementObserver({ selector }) {
   const { on, emit } = EventEmitter();
 
   const intersectionObserver = new IntersectionObserver((entries) => {
-    entries.forEach(({ intersectionRatio, target: element }) => {
+    for (const { intersectionRatio, target: element } of entries) {
       if (intersectionRatio > 0) {
         emit("elementVisible", element);
       } else {
         emit("elementInvisible", element);
       }
-    });
+    }
   });
 
   const mutationObserver = new MutationObserver((mutations) => {
-    mutations.forEach(({ addedNodes, removedNodes }) => {
+    for (const { addedNodes, removedNodes } of mutations) {
       for (const element of Array.from(addedNodes)) {
         if (element.matches && element.matches(selector)) {
           emit("elementAdded", element);
@@ -28,7 +28,7 @@ function ElementObserver({ selector }) {
           intersectionObserver.unobserve(element);
         }
       }
-    });
+    }
   });
   mutationObserver.observe(document.documentElement, {
     childList: true,

@@ -77,9 +77,9 @@ export default function VideoController({ element }) {
   function registerListeners() {
     document.addEventListener("fullscreenchange", updateState);
 
-    ELEMENT_STATE_EVENTS.forEach((eventName) => {
+    for (const eventName of ELEMENT_STATE_EVENTS) {
       element.addEventListener(eventName, updateState);
-    });
+    }
 
     // no need for more frequent updates
     element.addEventListener("timeupdate", updateStateThrottled);
@@ -88,9 +88,9 @@ export default function VideoController({ element }) {
   function unregisterListeners() {
     document.removeEventListener("fullscreenchange", updateState);
 
-    ELEMENT_STATE_EVENTS.forEach((eventName) => {
+    for (const eventName of ELEMENT_STATE_EVENTS) {
       element.removeEventListener(eventName, updateState);
-    });
+    }
 
     element.removeEventListener("timeupdate", updateStateThrottled);
   }
@@ -192,9 +192,9 @@ export default function VideoController({ element }) {
   }
 
   function updateState() {
-    ELEMENT_STATE_PROPERTIES.forEach((property) => {
+    for (const property of ELEMENT_STATE_PROPERTIES) {
       previousState[property] = getPropertyValue(element, property);
-    });
+    }
   }
 
   function getPropertyValue(element, property) {
