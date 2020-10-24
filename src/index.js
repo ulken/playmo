@@ -6,7 +6,7 @@ import VideoController from "./video-controller";
 
 const debug = createDebug("playmo:main");
 
-(async function main() {
+(function main() {
   debug("extension loaded");
 
   const keyboardShortcutsByElement = new WeakMap();
