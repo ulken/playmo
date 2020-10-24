@@ -36,24 +36,28 @@ export default function KeyboardShortcuts({ video }) {
   const state = { ...defaultState };
 
   return {
-    registerKeyListeners,
-    deregisterKeyListeners,
+    registerListeners,
+    unregisterListeners,
   };
 
-  function registerKeyListeners() {
-    Object.keys(keyEventCodeToCommandHandler).forEach((eventName) => {
+  function registerListeners() {
+    for (const eventName of Object.keys(keyEventCodeToCommandHandler)) {
       document.addEventListener(eventName, onKeyEvent);
-    });
+    }
     document.addEventListener("keydown", preventSpacebarFromSrollingPage);
     document.addEventListener("keyup", resetState);
+
+    video.registerListeners();
   }
 
-  function deregisterKeyListeners() {
-    Object.keys(keyEventCodeToCommandHandler).forEach((eventName) => {
+  function unregisterListeners() {
+    for (const eventName of Object.keys(keyEventCodeToCommandHandler)) {
       document.removeEventListener(eventName, onKeyEvent);
-    });
+    }
     document.removeEventListener("keydown", preventSpacebarFromSrollingPage);
     document.removeEventListener("keyup", resetState);
+
+    video.unregisterListeners();
   }
 
   function preventSpacebarFromSrollingPage(event) {
@@ -69,9 +73,9 @@ export default function KeyboardShortcuts({ video }) {
   }
 
   function resetState() {
-    Object.entries(defaultState).forEach(([k, v]) => {
+    for (const [k, v] of Object.entries(defaultState)) {
       state[k] = v;
-    });
+    }
   }
 
   function onKeyEvent(event) {

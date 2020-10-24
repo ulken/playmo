@@ -1,11 +1,24 @@
 {
   "name": "playmo",
   "version": "0.1.0",
-  "description": "Add missing keyboard shortcuts to various streaming services",
+  "description": "Gracefully add missing keyboard shortcuts to video players",
   "main": "src/index.js",
   "repository": "https://github.com/ulken/playmo",
   "author": "Oskar Löfgren <islander.abroad@gmail.com>",
   "license": "MIT",
+  "keywords": [
+    "video",
+    "video player",
+    "keyboard shortcuts",
+    "hotkeys",
+    "chrome extension",
+    "streaming service",
+    "streaming video",
+    "hbo nordic",
+    "dplay",
+    "sf anytime",
+    "viafree"
+  ],
   "scripts": {
     "bundle": "parcel build src/{index,background}.js",
     "copy": "mkdir -p dist/ && cp manifest.json dist/",
@@ -23,5 +36,8 @@
     "crx": "^5.0.0",
     "debug": "^4.1.1",
     "parcel-bundler": "^1.11.0"
+  },
+  "dependencies": {
+    "mitt": "^2.1.0"
   }
 }

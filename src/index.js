@@ -1,7 +1,7 @@
 import createDebug from "debug";
+import ElementObserver from "./element-observer";
 import KeyboardShortcuts from "./keyboard-shortcuts";
-import { onElementRemove, onEvent, waitForElement } from "./utils/dom";
-import getCurrentVendor from "./vendor/current";
+import { onEvent } from "./utils/dom";
 import VideoController from "./video-controller";
 
 const debug = createDebug("playmo:main");
@@ -9,38 +9,44 @@ const debug = createDebug("playmo:main");
 (function main() {
   debug("extension loaded");
 
-  loop();
+  const keyboardShortcutsByElement = new WeakMap();
+
+  const elementObserver = ElementObserver({ selector: "video" });
+
+  elementObserver.on("elementAdded", (element) => {
+    debug("element added", element);
+    keyboardShortcutsByElement.set(
+      element,
+      KeyboardShortcuts({ video: VideoController({ element }) })
+    );
+  });
+
+  elementObserver.on("elementVisible", async (element) => {
+    debug("element visible", element);
+
+    await videoLoaded(element);
+    debug("video loaded", element);
+
+    keyboardShortcutsByElement.get(element).registerListeners();
+  });
+
+  elementObserver.on("elementInvisible", (element) => {
+    debug("element invisible", element);
+    keyboardShortcutsByElement.get(element).unregisterListeners();
+  });
+
+  elementObserver.on("elementRemoved", (element) => {
+    debug("element removed", element);
+
+    keyboardShortcutsByElement.get(element)?.unregisterListeners();
+    keyboardShortcutsByElement.delete(element);
+  });
 })();
 
-async function loop() {
-  const { elementSelector } = getCurrentVendor();
-  debug(`element selector: ${elementSelector}`);
-
-  const element = await videoLoaded(elementSelector);
-  debug("video element loaded");
-
-  const video = VideoController({ element });
-  const keyboardShortcuts = KeyboardShortcuts({ video });
-
-  keyboardShortcuts.registerKeyListeners();
-
-  // if video element is removed when e.g. loading next video,
-  // clean up and start over again
-  await onElementRemove(element);
-  debug("video element removed");
-
-  keyboardShortcuts.deregisterKeyListeners();
-  video.destroy();
-  loop();
-}
-
-async function videoLoaded(selector) {
-  const video = await waitForElement(selector);
-
+async function videoLoaded(video) {
   if (video.readyState === HTMLVideoElement.HAVE_METADATA) {
-    return video;
+    return Promise.resolve();
   }
 
   await onEvent(video, "loadedmetadata");
-  return video;
 }

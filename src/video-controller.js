@@ -27,30 +27,25 @@ export default function VideoController({ element }) {
   };
 
   const ELEMENT_STATE_PROPERTIES = [
-    "paused,",
+    "paused",
     "currentTime",
     "volume",
     "muted",
     "playbackRate",
     "fullscreen",
   ];
+  // note: `volumehange` includes changes to both the `volume` and `muted` properties
+  const ELEMENT_STATE_EVENTS = [
+    "play",
+    "pause",
+    "playing",
+    "ended",
+    "volumechange",
+    "ratechange",
+  ];
 
   const previousState = createSnapshot(ELEMENT_STATE_PROPERTIES);
-
-  // note: `volumehange` includes changes to both the `volume` and `muted` properties
-  ["play", "pause", "playing", "ended", "volumechange", "ratechange"].forEach(
-    (eventName) => {
-      element.addEventListener(eventName, updateState);
-    }
-  );
-
-  // no need for more frequent updates
-  element.addEventListener(
-    "timeupdate",
-    throttle(updateState, TIME_THROTTLE_MS)
-  );
-
-  document.addEventListener("fullscreenchange", updateState);
+  const updateStateThrottled = throttle(updateState, TIME_THROTTLE_MS);
 
   return {
     isPlaying,
@@ -68,7 +63,8 @@ export default function VideoController({ element }) {
     toggleFullscreen: withStateUpdate(toggleFullscreen),
     exitFullscreen: withStateUpdate(exitFullscreen),
     hasStateChanged,
-    destroy,
+    registerListeners,
+    unregisterListeners,
   };
 
   function withStateUpdate(action) {
@@ -78,8 +74,25 @@ export default function VideoController({ element }) {
     };
   }
 
-  function destroy() {
+  function registerListeners() {
+    document.addEventListener("fullscreenchange", updateState);
+
+    for (const eventName of ELEMENT_STATE_EVENTS) {
+      element.addEventListener(eventName, updateState);
+    }
+
+    // no need for more frequent updates
+    element.addEventListener("timeupdate", updateStateThrottled);
+  }
+
+  function unregisterListeners() {
     document.removeEventListener("fullscreenchange", updateState);
+
+    for (const eventName of ELEMENT_STATE_EVENTS) {
+      element.removeEventListener(eventName, updateState);
+    }
+
+    element.removeEventListener("timeupdate", updateStateThrottled);
   }
 
   function isPlaying() {
@@ -179,9 +192,9 @@ export default function VideoController({ element }) {
   }
 
   function updateState() {
-    ELEMENT_STATE_PROPERTIES.forEach((property) => {
+    for (const property of ELEMENT_STATE_PROPERTIES) {
       previousState[property] = getPropertyValue(element, property);
-    });
+    }
   }
 
   function getPropertyValue(element, property) {
