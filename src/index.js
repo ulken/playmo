@@ -17,9 +17,9 @@ const debug = createDebug("playmo:main");
   elementObserver.on("elementAdded", (element) => {
     debug("element added", element);
 
-    const video = VideoController({ element });
-    keyboardShortcutsByElement.set(element, KeyboardShortcuts({ video }));
-    autoPlayer.track(element, { controller: video });
+    const controller = VideoController({ element });
+    keyboardShortcutsByElement.set(element, KeyboardShortcuts({ controller }));
+    autoPlayer.track(element, { controller });
   });
 
   elementObserver.on("elementVisible", async (element) => {
