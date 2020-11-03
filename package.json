@@ -1,6 +1,6 @@
 {
   "name": "playmo",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Gracefully add missing keyboard shortcuts to video players",
   "main": "src/index.js",
   "repository": "https://github.com/ulken/playmo",
