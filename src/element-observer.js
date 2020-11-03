@@ -37,12 +37,8 @@ function ElementObserver({ selector }) {
 
   return {
     on,
-    observe,
+    observe: intersectionObserver.observe,
   };
-
-  function observe(element) {
-    intersectionObserver.observe(element);
-  }
 }
 
 export default ElementObserver;
