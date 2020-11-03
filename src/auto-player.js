@@ -3,44 +3,44 @@ import createDebug from "debug";
 const debug = createDebug("playmo:auto-player");
 
 function AutoPlayer({ observer }) {
-  const stateByElement = new WeakMap();
+  const stateByVideo = new WeakMap();
 
-  observer.on("elementVisible", onElementVisible);
-  observer.on("elementInvisible", onElementInvisible);
+  observer.on("elementVisible", onVideoVisible);
+  observer.on("elementInvisible", onVideoInvisible);
 
   return {
     track,
     untrack,
   };
 
-  function track(element, { controller }) {
-    debug("tracking element", element);
-    stateByElement.set(element, { autoPaused: false, controller });
+  function track(video, { controller }) {
+    debug("tracking video", video);
+    stateByVideo.set(video, { autoPaused: false, controller });
   }
 
-  function untrack(element) {
-    debug("untracking element", element);
-    stateByElement.delete(element);
+  function untrack(video) {
+    debug("untracking video", video);
+    stateByVideo.delete(video);
   }
 
-  function onElementVisible(element) {
-    const state = stateByElement.get(element);
+  function onVideoVisible(video) {
+    const state = stateByVideo.get(video);
     const { autoPaused, controller } = state;
 
     if (autoPaused && !controller.isPlaying()) {
-      debug("auto-resuming video", element);
+      debug("auto-resuming video", video);
       controller.togglePlayState();
-      stateByElement.set(element, { ...state, autoPaused: false });
+      stateByVideo.set(video, { ...state, autoPaused: false });
     }
   }
 
-  function onElementInvisible(element) {
-    const state = stateByElement.get(element);
+  function onVideoInvisible(video) {
+    const state = stateByVideo.get(video);
     const { controller } = state;
     if (controller.isPlaying()) {
-      debug("auto-pausing video", element);
+      debug("auto-pausing video", video);
       controller.togglePlayState();
-      stateByElement.set(element, { ...state, autoPaused: true });
+      stateByVideo.set(video, { ...state, autoPaused: true });
     }
   }
 }

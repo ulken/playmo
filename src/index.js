@@ -10,49 +10,49 @@ const debug = createDebug("playmo:main");
 (async function main() {
   debug("extension loaded");
 
-  const keyboardShortcutsByElement = new WeakMap();
-  const elementObserver = ElementObserver({ selector: "video" });
-  const autoPlayer = AutoPlayer({ observer: elementObserver });
+  const shortcutsByVideo = new WeakMap();
+  const videoObserver = ElementObserver({ selector: "video" });
+  const autoPlayer = AutoPlayer({ observer: videoObserver });
 
-  const initializeElement = (element) => {
-    const controller = VideoController({ element });
-    keyboardShortcutsByElement.set(element, KeyboardShortcuts({ controller }));
-    autoPlayer.track(element, { controller });
+  const initializeVideo = (video) => {
+    const controller = VideoController({ video });
+    shortcutsByVideo.set(video, KeyboardShortcuts({ controller }));
+    autoPlayer.track(video, { controller });
   };
 
-  elementObserver.on("elementAdded", (element) => {
-    debug("element added", element);
+  videoObserver.on("elementAdded", (video) => {
+    debug("video added", video);
 
-    initializeElement(element);
+    initializeVideo(video);
   });
 
-  elementObserver.on("elementVisible", async (element) => {
-    debug("element visible", element);
+  videoObserver.on("elementVisible", async (video) => {
+    debug("video visible", video);
 
-    await videoLoaded(element);
-    debug("video loaded", element);
+    await videoLoaded(video);
+    debug("video loaded", video);
 
-    keyboardShortcutsByElement.get(element).registerListeners();
+    shortcutsByVideo.get(video).registerListeners();
   });
 
-  elementObserver.on("elementInvisible", (element) => {
-    debug("element invisible", element);
-    keyboardShortcutsByElement.get(element).unregisterListeners();
+  videoObserver.on("elementInvisible", (video) => {
+    debug("video invisible", video);
+    shortcutsByVideo.get(video).unregisterListeners();
   });
 
-  elementObserver.on("elementRemoved", (element) => {
-    debug("element removed", element);
+  videoObserver.on("elementRemoved", (video) => {
+    debug("video removed", video);
 
-    autoPlayer.untrack(element);
-    keyboardShortcutsByElement.get(element)?.unregisterListeners();
-    keyboardShortcutsByElement.delete(element);
+    autoPlayer.untrack(video);
+    shortcutsByVideo.get(video)?.unregisterListeners();
+    shortcutsByVideo.delete(video);
   });
 
-  for (const element of document.querySelectorAll("video")) {
-    debug("element found", element);
+  for (const video of document.querySelectorAll("video")) {
+    debug("video found", video);
 
-    initializeElement(element);
-    elementObserver.observe(element);
+    initializeVideo(video);
+    videoObserver.observe(video);
   }
 })();
 

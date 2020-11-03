@@ -1,11 +1,9 @@
 import throttle from "./utils/throttle";
 
-export default function VideoController({ element }) {
-  if (!element || !element.tagName === "VIDEO") {
+export default function VideoController({ video }) {
+  if (!video || !video.tagName === "VIDEO") {
     throw new Error("video element required");
   }
-
-  const TIME_THROTTLE_MS = 100;
 
   const ScrubSpeed = {
     Default: 10,
@@ -26,26 +24,21 @@ export default function VideoController({ element }) {
     Default: 1,
   };
 
-  const ELEMENT_STATE_PROPERTIES = [
-    "paused",
-    "currentTime",
-    "volume",
-    "muted",
-    "playbackRate",
-    "fullscreen",
-  ];
-  // note: `volumehange` includes changes to both the `volume` and `muted` properties
-  const ELEMENT_STATE_EVENTS = [
-    "play",
-    "pause",
-    "playing",
-    "ended",
-    "volumechange",
-    "ratechange",
-  ];
+  const VideoState = {
+    Properties: [
+      "paused",
+      "currentTime",
+      "volume",
+      "muted",
+      "playbackRate",
+      "fullscreen",
+    ],
+    // note: `volumehange` includes changes to both the `volume` and `muted` properties
+    Events: ["play", "pause", "playing", "ended", "volumechange", "ratechange"],
+  };
 
-  const previousState = createSnapshot(ELEMENT_STATE_PROPERTIES);
-  const updateStateThrottled = throttle(updateState, TIME_THROTTLE_MS);
+  const previousState = createSnapshot(VideoState.Properties);
+  const updateStateThrottled = throttle(updateState, 100);
 
   return {
     isPlaying,
@@ -77,44 +70,44 @@ export default function VideoController({ element }) {
   function registerListeners() {
     document.addEventListener("fullscreenchange", updateState);
 
-    for (const eventName of ELEMENT_STATE_EVENTS) {
-      element.addEventListener(eventName, updateState);
+    for (const eventName of VideoState.Events) {
+      video.addEventListener(eventName, updateState);
     }
 
     // no need for more frequent updates
-    element.addEventListener("timeupdate", updateStateThrottled);
+    video.addEventListener("timeupdate", updateStateThrottled);
   }
 
   function unregisterListeners() {
     document.removeEventListener("fullscreenchange", updateState);
 
-    for (const eventName of ELEMENT_STATE_EVENTS) {
-      element.removeEventListener(eventName, updateState);
+    for (const eventName of VideoState.Events) {
+      video.removeEventListener(eventName, updateState);
     }
 
-    element.removeEventListener("timeupdate", updateStateThrottled);
+    video.removeEventListener("timeupdate", updateStateThrottled);
   }
 
   function isPlaying() {
-    return !element.paused;
+    return !video.paused;
   }
 
   function isMuted() {
-    return element.muted;
+    return video.muted;
   }
 
   function isFullscreen() {
     return (
       document.fullscreenElement !== null &&
-      document.fullscreenElement.isSameNode(element)
+      document.fullscreenElement.isSameNode(video)
     );
   }
 
   function togglePlayState() {
     if (isPlaying()) {
-      element.pause();
+      video.pause();
     } else {
-      element.play();
+      video.play();
     }
   }
 
@@ -139,7 +132,7 @@ export default function VideoController({ element }) {
   }
 
   function toggleMute() {
-    element.muted = !element.muted;
+    video.muted = !video.muted;
   }
 
   function increasePlaybackRate() {
@@ -166,7 +159,7 @@ export default function VideoController({ element }) {
     if (isFullscreen()) {
       exitFullscreen();
     } else {
-      element.requestFullscreen();
+      video.requestFullscreen();
     }
   }
 
@@ -176,7 +169,7 @@ export default function VideoController({ element }) {
 
   function hasStateChanged() {
     return Object.entries(previousState).some(([property, oldValue]) => {
-      const currentValue = getPropertyValue(element, property);
+      const currentValue = getPropertyValue(video, property);
       if (property === "currentTime") {
         // any change less than a second is not practically relevant
         return Math.abs(currentValue - oldValue) > 1;
@@ -185,32 +178,32 @@ export default function VideoController({ element }) {
     });
   }
 
-  function cloneState(element, { properties }) {
+  function cloneState(video, { properties }) {
     return Object.fromEntries(
-      properties.map((p) => [p, getPropertyValue(element, p)])
+      properties.map((p) => [p, getPropertyValue(video, p)])
     );
   }
 
   function updateState() {
-    for (const property of ELEMENT_STATE_PROPERTIES) {
-      previousState[property] = getPropertyValue(element, property);
+    for (const property of VideoState.Properties) {
+      previousState[property] = getPropertyValue(video, property);
     }
   }
 
-  function getPropertyValue(element, property) {
-    return property === "fullscreen" ? isFullscreen() : element[property];
+  function getPropertyValue(video, property) {
+    return property === "fullscreen" ? isFullscreen() : video[property];
   }
 
   function createSnapshot(properties) {
-    return cloneState(element, { properties });
+    return cloneState(video, { properties });
   }
 
   function getCurrentTime() {
-    return element.currentTime;
+    return video.currentTime;
   }
 
   function setCurrentTime(time) {
-    element.currentTime = time;
+    video.currentTime = time;
   }
 
   function getDurationToScrub({ fast }) {
@@ -218,18 +211,18 @@ export default function VideoController({ element }) {
   }
 
   function getVolume() {
-    return element.volume;
+    return video.volume;
   }
 
   function setVolume(volume) {
-    element.volume = volume;
+    video.volume = volume;
   }
 
   function getPlaybackRate() {
-    return element.playbackRate;
+    return video.playbackRate;
   }
 
   function setPlaybackRate(playbackRate) {
-    element.playbackRate = playbackRate;
+    video.playbackRate = playbackRate;
   }
 }
