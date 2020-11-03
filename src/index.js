@@ -14,12 +14,16 @@ const debug = createDebug("playmo:main");
   const elementObserver = ElementObserver({ selector: "video" });
   const autoPlayer = AutoPlayer({ observer: elementObserver });
 
+  const initializeElement = (element) => {
+    const video = VideoController({ element });
+    keyboardShortcutsByElement.set(element, KeyboardShortcuts({ video }));
+    autoPlayer.track(element, { controller: video });
+  };
+
   elementObserver.on("elementAdded", (element) => {
     debug("element added", element);
 
-    const controller = VideoController({ element });
-    keyboardShortcutsByElement.set(element, KeyboardShortcuts({ controller }));
-    autoPlayer.track(element, { controller });
+    initializeElement(element);
   });
 
   elementObserver.on("elementVisible", async (element) => {
@@ -43,6 +47,13 @@ const debug = createDebug("playmo:main");
     keyboardShortcutsByElement.get(element)?.unregisterListeners();
     keyboardShortcutsByElement.delete(element);
   });
+
+  for (const element of document.querySelectorAll("video")) {
+    debug("element found", element);
+
+    initializeElement(element);
+    elementObserver.observe(element);
+  }
 })();
 
 async function videoLoaded(video) {
