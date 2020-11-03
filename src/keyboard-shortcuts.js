@@ -8,7 +8,7 @@ const debug = createDebug("playmo:kbd");
 // prevent flooding (UI can't keep up anyway)
 const SCRUB_THROTTLE_MS = 100;
 
-export default function KeyboardShortcuts({ video }) {
+export default function KeyboardShortcuts({ controller }) {
   const keyEventCodeToCommandHandler = {
     // continuous, repetitive actions ("press and hold")
     keydown: {
@@ -47,7 +47,7 @@ export default function KeyboardShortcuts({ video }) {
     document.addEventListener("keydown", preventSpacebarFromSrollingPage);
     document.addEventListener("keyup", resetState);
 
-    video.registerListeners();
+    controller.registerListeners();
   }
 
   function unregisterListeners() {
@@ -57,7 +57,7 @@ export default function KeyboardShortcuts({ video }) {
     document.removeEventListener("keydown", preventSpacebarFromSrollingPage);
     document.removeEventListener("keyup", resetState);
 
-    video.unregisterListeners();
+    controller.unregisterListeners();
   }
 
   function preventSpacebarFromSrollingPage(event) {
@@ -82,7 +82,7 @@ export default function KeyboardShortcuts({ video }) {
     const { type, code } = event;
     debug(prettifyKeyboardEvent(event));
 
-    if (video.hasStateChanged()) {
+    if (controller.hasStateChanged()) {
       // note: handled `keydown` event propagates to `keyup`
       state.eventHandled = true;
     }
@@ -101,9 +101,9 @@ export default function KeyboardShortcuts({ video }) {
   }
 
   function togglePlayState() {
-    const playing = video.isPlaying();
+    const playing = controller.isPlaying();
     debug(`toggling play state: ${playing} -> ${!playing}`);
-    video.togglePlayState();
+    controller.togglePlayState();
   }
 
   function onSpaceKeyUp() {
@@ -117,28 +117,28 @@ export default function KeyboardShortcuts({ video }) {
   function onEnterKeyUp({ altKey: shouldResetPlaybackRate }) {
     if (shouldResetPlaybackRate) {
       debug("resetting playback rate");
-      video.resetPlaybackRate();
+      controller.resetPlaybackRate();
     }
   }
 
   function onMKeyUp() {
-    const muted = video.isMuted();
+    const muted = controller.isMuted();
     debug(`toggling muted state: ${muted} -> ${!muted}`);
-    video.toggleMute();
+    controller.toggleMute();
   }
 
   function onFKeyUp() {
-    const transition = video.isFullscreen()
+    const transition = controller.isFullscreen()
       ? "fullscreen -> windowed"
       : "windowed -> fullscreen";
     debug(`toggling fullscreen state: ${transition}`);
-    video.toggleFullscreen();
+    controller.toggleFullscreen();
   }
 
   function onEscapeKeyUp() {
-    if (video.isFullscreen()) {
+    if (controller.isFullscreen()) {
       debug("exiting fullscreen mode");
-      video.exitFullscreen();
+      controller.exitFullscreen();
     }
   }
 
@@ -148,10 +148,10 @@ export default function KeyboardShortcuts({ video }) {
   }) {
     if (decreasePlaybackRate) {
       debug("decreasing playback rate");
-      video.decreasePlaybackRate();
+      controller.decreasePlaybackRate();
     } else {
       debug(`rewinding [fast=${fast}]`);
-      video.rewind({ fast });
+      controller.rewind({ fast });
     }
   }
 
@@ -161,20 +161,20 @@ export default function KeyboardShortcuts({ video }) {
   }) {
     if (increasePlaybackRate) {
       debug("increasing playback rate");
-      video.increasePlaybackRate();
+      controller.increasePlaybackRate();
     } else {
       debug(`fast forwarding [fast=${fast}]`);
-      video.fastForward({ fast });
+      controller.fastForward({ fast });
     }
   }
 
   function onArrowUpKeyDown() {
     debug("volume up");
-    video.volumeUp();
+    controller.volumeUp();
   }
 
   function onArrowDownKeyDown() {
     debug("volume down");
-    video.volumeDown();
+    controller.volumeDown();
   }
 }
