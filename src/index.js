@@ -14,16 +14,12 @@ const debug = createDebug("playmo:main");
   const elementObserver = ElementObserver({ selector: "video" });
   const autoPlayer = AutoPlayer({ observer: elementObserver });
 
-  const initializeElement = (element) => {
-    const video = VideoController({ element });
-    keyboardShortcutsByElement.set(element, KeyboardShortcuts({ video }));
-    autoPlayer.track(element, { controller: video });
-  };
-
   elementObserver.on("elementAdded", (element) => {
     debug("element added", element);
 
-    initializeElement(element);
+    const video = VideoController({ element });
+    keyboardShortcutsByElement.set(element, KeyboardShortcuts({ video }));
+    autoPlayer.track(element, { controller: video });
   });
 
   elementObserver.on("elementVisible", async (element) => {
