@@ -1,9 +1,11 @@
 import createDebug from "debug";
 import { onEvent } from "./utils/dom";
+import throttle from "./utils/throttle";
 import ElementObserver from "./element-observer";
 import KeyboardShortcuts from "./keyboard-shortcuts";
 import VideoController from "./video-controller";
 import AutoPlayer from "./auto-player";
+import UserSimulator from "./user-simulator";
 
 const debug = createDebug("playmo:main");
 
@@ -13,6 +15,7 @@ const debug = createDebug("playmo:main");
   const shortcutsByVideo = new WeakMap();
   const videoObserver = ElementObserver({ selector: "video" });
   const autoPlayer = AutoPlayer({ observer: videoObserver });
+  const userSimulator = UserSimulator();
 
   const initializeVideo = (video) => {
     const controller = VideoController({ video });
@@ -32,7 +35,14 @@ const debug = createDebug("playmo:main");
     await videoLoaded(video);
     debug("video loaded", video);
 
-    shortcutsByVideo.get(video).registerListeners();
+    const shortcuts = shortcutsByVideo.get(video);
+    shortcuts.registerListeners();
+    shortcuts.on(
+      "eventHandled",
+      throttle(() => {
+        userSimulator.interactWith(video);
+      }, 100)
+    );
   });
 
   videoObserver.on("elementInvisible", (video) => {
@@ -44,7 +54,9 @@ const debug = createDebug("playmo:main");
     debug("video removed", video);
 
     autoPlayer.untrack(video);
-    shortcutsByVideo.get(video)?.unregisterListeners();
+    const shortcuts = shortcutsByVideo.get(video);
+    shortcuts?.unregisterListeners();
+    shortcuts?.off("eventHandled");
     shortcutsByVideo.delete(video);
   });
 

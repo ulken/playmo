@@ -1,14 +1,17 @@
 import createDebug from "debug";
+import EventEmitter from "mitt";
 import throttle from "./utils/throttle";
 import KeyCodes from "./utils/key-codes";
 import { prettifyKeyboardEvent } from "./utils/pretty-print";
 
 const debug = createDebug("playmo:kbd");
 
-// prevent flooding (UI can't keep up anyway)
-const SCRUB_THROTTLE_MS = 100;
-
 export default function KeyboardShortcuts({ controller }) {
+  // prevent flooding (UI can't keep up anyway)
+  const SCRUB_THROTTLE_MS = 100;
+
+  const { on, off, emit } = EventEmitter();
+
   const keyEventCodeToCommandHandler = {
     // continuous, repetitive actions ("press and hold")
     keydown: {
@@ -36,6 +39,8 @@ export default function KeyboardShortcuts({ controller }) {
   const state = { ...defaultState };
 
   return {
+    on,
+    off,
     registerListeners,
     unregisterListeners,
   };
@@ -97,6 +102,7 @@ export default function KeyboardShortcuts({ controller }) {
       debug(prettifyKeyboardEvent(event, "handling event"));
       event.preventDefault();
       handleCommand(event);
+      emit("eventHandled", event);
     }
   }
 
