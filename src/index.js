@@ -69,7 +69,7 @@ const debug = createDebug("playmo:main");
 })();
 
 async function videoLoaded(video) {
-  if (video.readyState === HTMLVideoElement.HAVE_METADATA) {
+  if (video.readyState >= HTMLVideoElement.HAVE_METADATA) {
     return Promise.resolve();
   }
 
