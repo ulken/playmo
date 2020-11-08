@@ -4,4 +4,12 @@ function onEvent(element, eventName) {
   });
 }
 
-export { onEvent };
+function ancestorOf(element, { generationsBack = 1 } = {}) {
+  let ancestor = element.parentNode;
+  for (let i = 1; i <= generationsBack; i++) {
+    ancestor = ancestor.parentNode;
+  }
+  return ancestor;
+}
+
+export { onEvent, ancestorOf };

@@ -1,4 +1,5 @@
 import throttle from "./utils/throttle";
+import { ancestorOf } from "./utils/dom";
 
 export default function VideoController({ video }) {
   if (!video || !video.tagName === "VIDEO") {
@@ -99,7 +100,7 @@ export default function VideoController({ video }) {
   function isFullscreen() {
     return (
       document.fullscreenElement !== null &&
-      document.fullscreenElement.isSameNode(video)
+      document.fullscreenElement.isSameNode(getFullscreenElement())
     );
   }
 
@@ -159,12 +160,21 @@ export default function VideoController({ video }) {
     if (isFullscreen()) {
       exitFullscreen();
     } else {
-      video.requestFullscreen();
+      getFullscreenElement().requestFullscreen();
     }
   }
 
   function exitFullscreen() {
     document.exitFullscreen();
+  }
+
+  function getFullscreenElement() {
+    // we're targeting an ancestor to have custom controls show in fullscreen mode.
+    // going 3 generations back is a simple heuristic based on observations in the wild.
+    // the most common cases seem to be 2-3 and using the latter to be one the safe side
+    // doesn't seem to hurt.
+    // note: done on-demand since video not always at its final location in the DOM at construction.
+    return ancestorOf(video, { generationsBack: 3 });
   }
 
   function hasStateChanged() {
