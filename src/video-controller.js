@@ -171,9 +171,9 @@ export default function VideoController({ video }) {
   function getFullscreenElement() {
     // we're targeting an ancestor to have custom controls show in fullscreen mode.
     // going 3 generations back is a simple heuristic based on observations in the wild.
-    // the most common cases seem to be 2-3 and using the latter to be one the safe side
+    // the most common cases seem to be 2-3 and using the latter to be on the safe side
     // doesn't seem to hurt.
-    // note: done on-demand since video not always at its final location in the DOM at construction.
+    // note: done on-demand since video is not always at its final location in the DOM at construction.
     return ancestorOf(video, { generationsBack: 3 });
   }
 
