@@ -35,8 +35,8 @@ function UserSimulator() {
   }
 
   function createRandomMouseMoveEvent({ left, right, top, bottom }) {
-    const x = randomNumber(left, right);
-    const y = randomNumber(top, bottom);
+    const x = randomNumber({ min: left, max: right });
+    const y = randomNumber({ min: top, max: bottom });
 
     return new MouseEvent("mousemove", {
       view: window,
