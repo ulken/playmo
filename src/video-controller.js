@@ -1,5 +1,6 @@
 import throttle from "./utils/throttle";
 import { ancestorOf } from "./utils/dom";
+import { syncVideoJsFullscreenState } from "./utils/vendor";
 
 export default function VideoController({ video }) {
   if (!video || !video.tagName === "VIDEO") {
@@ -100,7 +101,7 @@ export default function VideoController({ video }) {
   function isFullscreen() {
     return (
       document.fullscreenElement !== null &&
-      document.fullscreenElement.isSameNode(getFullscreenElement())
+      document.fullscreenElement.contains(video)
     );
   }
 
@@ -156,16 +157,21 @@ export default function VideoController({ video }) {
     setPlaybackRate(PlaybackRate.Default);
   }
 
-  function toggleFullscreen() {
-    if (isFullscreen()) {
-      exitFullscreen();
+  async function toggleFullscreen() {
+    const fullscreen = isFullscreen();
+
+    if (fullscreen) {
+      await exitFullscreen();
     } else {
-      getFullscreenElement().requestFullscreen();
+      await getFullscreenElement().requestFullscreen();
     }
+
+    // HBO Nordic's fullscreen button doesn't adapt to external fullscreen changes
+    syncVideoJsFullscreenState(video, { fullscreen: !fullscreen });
   }
 
-  function exitFullscreen() {
-    document.exitFullscreen();
+  async function exitFullscreen() {
+    await document.exitFullscreen();
   }
 
   function getFullscreenElement() {

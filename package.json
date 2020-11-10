@@ -20,11 +20,11 @@
     "viafree"
   ],
   "scripts": {
-    "bundle": "parcel build src/{index,background}.js",
+    "bundle": "parcel build src/{index,background,extension}.js",
     "copy": "mkdir -p dist/ && cp manifest.json dist/",
     "build": "yarn copy && yarn bundle",
     "package": "yarn build && crx pack --zip-output playmo.zip --output playmo.crx dist/",
-    "watch": "parcel watch src/{index,background}.js",
+    "watch": "parcel watch src/{index,background,extension}.js",
     "clean": "rm -rf dist/",
     "bump": "bump *.json --yes"
   },
